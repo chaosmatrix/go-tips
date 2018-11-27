@@ -30,28 +30,27 @@ func Ipv4AddrToDec2(addr string) (dec int64) {
 	if len(addr) > 15 {
 		return -1
 	}
-	prevIdx, idx := 0, 0
+	prevIdx, idx, num := 0, 0, 0
 	var shift uint = 3
 	for ; idx < len(addr); idx++ {
 		if addr[idx] < '0' || addr[idx] > '9' {
 			if addr[idx] != '.' {
 				return -1
 			} else {
-				num := 0
 				for i := idx - 1; i >= prevIdx; i-- {
 					num = num + int(addr[i]-'0')*int(math.Pow10(idx-1-i))
 				}
 				dec |= int64(num) << uint(shift*8)
 				shift--
 				prevIdx = idx + 1
+				num = 0
 			}
 		}
 	}
-	num := 0
 	for i := idx - 1; i >= prevIdx; i-- {
 		num = num + int(addr[i]-'0')*int(math.Pow10(idx-1-i))
 	}
-	dec |= int64(num) << uint(0)
+	dec |= int64(num)
 	return
 }
 
